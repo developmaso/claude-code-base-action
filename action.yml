@@ -78,6 +78,11 @@ inputs:
     required: false
     default: "false"
 
+  claude_code_version:
+    description: "Version of @anthropic-ai/claude-code to install (default: latest)"
+    required: false
+    default: "latest"
+
 outputs:
   conclusion:
     description: "Execution status of Claude Code ('success' or 'failure')"
@@ -121,7 +126,11 @@ runs:
         npm cache clean --force 2>/dev/null || true
         
         # forceオプション付きでインストール
-        npm install -g @anthropic-ai/claude-code@1.0.2 --force
+        npm install -g @anthropic-ai/claude-code@${{ inputs.claude_code_version }} --force
+
+        # インストールされたバージョンを確認
+        echo "Installed Claude Code version:"
+        claude --version || npm list -g @anthropic-ai/claude-code
 
     - name: Run Claude Code Action
       shell: bash
